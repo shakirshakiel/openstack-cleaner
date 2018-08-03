@@ -11,6 +11,11 @@ class Port
   end
 
   def destroy
+    p "Destroying port #{@id}"
+    if @id.empty?
+      return
+    end
+
     `openstack port set #{@id} --device-owner clear`
     `openstack port delete #{@id}`
   end

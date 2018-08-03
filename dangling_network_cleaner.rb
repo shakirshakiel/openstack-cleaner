@@ -18,14 +18,36 @@ class DanglingNetworkCleaner
     (all_network_names - attached_network_names)
   end
 
-  def clean
+  def clean_networks
     dangling_network_names = all
     dangling_network_names.each do |dangling_network_name|
       networks = @network_list.find_all_by_name(dangling_network_name)
-      networks[0].destroy
+      networks.map &:destroy
+    end
+  end
+
+  def clean_servers(exclude_network, server_names)
+    servers = server_names.uniq.map {|server_name| @server_list.find_all_by_name(server_name)}.flatten
+    network_names = servers.map(&:network_names).flatten.reject {|n| n == exclude_network}
+    p "Following networks will be destroyed #{network_names}"
+    network_names.each do |network_name|
+      networks = @network_list.find_all_by_name(network_name)
+      networks.map &:destroy
+    end
+    servers.each do |server|
+      server.destroy
     end
   end
 
 end
 
-DanglingNetworkCleaner.new.clean
+cleaner = DanglingNetworkCleaner.new
+
+case ARGV[0]
+when "all"
+  cleaner.all
+when "clean_networks"
+  cleaner.clean_networks
+when "clean_servers"
+  cleaner.clean_servers("ION-VIDEO-VXOA", ARGV[1..-1])
+end

@@ -21,6 +21,10 @@ class ServerList
     end
   end
 
+  def find_all_by_name(name)
+    servers.select {|s| s.name == name}
+  end
+
   private
 
   def network_names(network_string)

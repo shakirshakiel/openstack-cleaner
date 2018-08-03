@@ -8,6 +8,7 @@ class Subnet
   end
 
   def destroy
+    p "Destroying Subnet #{@id}"
     port_list = PortList.new
     port_list = port_list.find_all_by_subnet_id(@id)
     port_list.each do |port|

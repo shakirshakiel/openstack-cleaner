@@ -9,4 +9,9 @@ class Server
     @image = params[:image]
     @flavor = params[:flavor]
   end
+
+  def destroy
+    p "Destroying server #{@id}"
+    `openstack server delete #{@id}`
+  end
 end

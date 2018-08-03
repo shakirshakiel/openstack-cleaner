@@ -10,6 +10,7 @@ class Network
   end
 
   def destroy
+    p "Destroying network #{@id}"
     subnet_list = SubnetList.new
     subnets = subnet_list.find_all_by_network_id(@id)
     subnets.each do |subnet|
