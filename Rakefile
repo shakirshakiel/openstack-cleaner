@@ -20,3 +20,15 @@ task :clean_servers do
   cleaner = OpenstackCleaner.new
   cleaner.clean_servers(exclude_networks, servers)
 end
+
+desc "Show all dangling routers"
+task :dangling_routers do
+  cleaner = OpenstackCleaner.new
+  p cleaner.dangling_routers
+end
+
+desc "Clean all dangling routers"
+task :clean_dangling_routers do
+  cleaner = OpenstackCleaner.new
+  cleaner.clean_dangling_routers
+end

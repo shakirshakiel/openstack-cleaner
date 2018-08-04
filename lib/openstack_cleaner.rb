@@ -1,5 +1,6 @@
 require_relative './gateway/server'
 require_relative './gateway/network'
+require_relative './gateway/router'
 
 class OpenstackCleaner
 
@@ -27,6 +28,15 @@ class OpenstackCleaner
     servers.each do |server|
       Gateway::Server.destroy(server)
     end
+  end
+
+  def dangling_routers
+    routers = Gateway::Router.routers
+    routers.select {|r| r.interfaces.empty? }
+  end
+
+  def clean_dangling_routers
+    dangling_routers.each {|r| Gateway::Router.destroy(r) }
   end
 
 end

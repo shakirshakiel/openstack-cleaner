@@ -1,3 +1,5 @@
+require 'json'
+
 module Gateway
 
   class OpenStackCli
@@ -52,6 +54,24 @@ module Gateway
         `openstack port set #{id} --device-owner clear`
         `openstack port delete #{id}`
       end
+
+      def router_list
+        p "Fetching router list"
+        # | ID | Name | Status | State | Distributed | HA | Project
+        cleansed_output(`openstack router list`)
+      end
+
+      def router_show(id)
+        p "Fetching router #{id}"
+        interfaces_info = `openstack router show #{id} | grep interfaces_info`.split("\n")[0].split("|")[2]
+        JSON.parse(interfaces_info)
+      end
+
+      def router_delete(id)
+        p "Deleting router #{id}"
+        `openstack router delete #{id}`
+      end
+
 
       private
 
