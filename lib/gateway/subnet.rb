@@ -1,6 +1,7 @@
 require_relative 'openstack_cli'
 require_relative 'port'
 require_relative '../resource/subnet'
+require_relative '../gateway/router'
 
 module Gateway
 
@@ -33,6 +34,7 @@ module Gateway
         subnets_to_be_deleted.each do |s|
           Gateway::Port.destroy_all_by_subnet_id(s.id)
           OpenStackCli.subnet_delete(s.id)
+          Gateway::Router.destroy_all_by_subnet_id(s.id)
           @metadata.reject! {|m| m[0] == s.id}
         end
       end

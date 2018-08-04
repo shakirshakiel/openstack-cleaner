@@ -21,6 +21,9 @@ class OpenstackCleaner
   def clean_servers(exclude_networks, server_names)
     servers = server_names.uniq.map {|server_name| Gateway::Server.find_all_by_name(server_name)}.flatten
     network_names = servers.map(&:network_names).flatten.reject {|n| exclude_networks.include?(n)}
+    # Prefetch routers
+    Gateway::Router.routers
+
     network_names.each do |network_name|
       networks = Gateway::Network.find_all_by_name(network_name)
       networks.map {|n| Gateway::Network.destroy(n)}
